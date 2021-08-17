@@ -27,6 +27,7 @@ namespace webapi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSwaggerGen();
             services.AddDbContext<DataContext>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
@@ -38,6 +39,10 @@ namespace webapi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(opt => {
+                    opt.SwaggerEndpoint("/swagger/v1/swagger.json", "Product API v1");
+                });
             }
 
             app.UseRouting();
