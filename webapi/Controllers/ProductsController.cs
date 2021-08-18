@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -22,8 +23,12 @@ namespace webapi.Controllers
         {
             return await _context.Products.ToListAsync();
         }
-        // TODO: Get all v2 (support for pagination)
-        // TODO: Get one by ID
+        [HttpGet("page/{pageNumber}")]
+        public async Task<ActionResult<List<Product>>> getAllProductsByPage(int pageNumber)
+        {
+            System.Int32 skip = (pageNumber-1)*10;
+            return await _context.Products.Skip(skip).Take(10).ToListAsync();
+        }
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> getProductById(Guid id)
         {
