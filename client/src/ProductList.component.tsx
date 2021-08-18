@@ -3,10 +3,11 @@ import config from './config.json';
 
 
 interface Product {
-    Name: string,
-    ImgUri: string,
-    Price: number,
-    Description: string
+    id: string,
+    name: string,
+    imgUri: string,
+    price: number,
+    description: string
 }
 interface State {
     isLoaded: boolean;
@@ -76,15 +77,18 @@ export class ProductList extends React.Component {
     }
     getProductComponents(products: Array<Product>) : JSX.Element[] {
         return products.map(p => (
-            <div className="column">
+            <div className="column" key={p.id}>
                 <div className="ui segment">
-                <img src={p.ImgUri} alt={p.Name}/>
-                    <p><strong>{p.Name}</strong></p>
-                    <p>{p.Description}</p>
-                    <p><strong>{p.Price}</strong></p>
+                <img src={this.getFullImageUri(p.imgUri)} alt={p.name}/>
+                    <p><strong>{p.name}</strong></p>
+                    <p>{p.description}</p>
+                    <p><strong>{p.price}</strong></p>
                 </div>
             </div>
         ));
+    }
+    getFullImageUri(imgName: string) {
+        return config.api_base_uri + '/files/' + imgName;
     }
 
     componentDidMount() {
@@ -94,7 +98,7 @@ export class ProductList extends React.Component {
         .then((result)=>{
             this.setState({
                 isLoaded: true,
-                items: result.items
+                items: result
             });
         },
         (error) => {
